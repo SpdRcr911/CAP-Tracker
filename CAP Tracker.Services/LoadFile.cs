@@ -2,7 +2,7 @@
 namespace CAP_Tracker.Services;
 public class DataService
 {
-    void LoadFile()
+void LoadFile()
 {
 	var data = new List<CAPTrackerData>();
 	var excel = new Excel.Application();
@@ -61,5 +61,19 @@ public class DataService
 
 	zeroData.AddRange(data);
 	Data = zeroData;
+}
+void DeserializeFile()
+{
+	var resultBytes = File.ReadAllBytes(BinFileName);
+	Data = JsonSerializer.Deserialize<List<CAPTrackerData>>(new ReadOnlySpan<byte>(resultBytes));
+}
+
+void SerializeFile()
+{
+	var resultBytes = JsonSerializer.SerializeToUtf8Bytes(Data,
+						new JsonSerializerOptions { WriteIndented = false, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+						
+	resultBytes.Dump();
+	File.WriteAllBytes(BinFileName, resultBytes);
 }
 }
