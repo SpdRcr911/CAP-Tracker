@@ -1,4 +1,6 @@
-record CapAchievemntRecord(string AchvName, DateOnly? AprDate)
+namespace CAP_Tracker.Library;
+
+public record CapAchievemntRecord(string AchvName, DateOnly? AprDate)
 {
 	public int DaysToPromote { get; set; }
 	public DateOnly? StartDate { get; set; }

@@ -30,7 +30,7 @@ public class CAPTrackerData
 	public DateOnly? PhyFitTest { get; set; }
 	[JsonConverter(typeof(NullableDateOnlyJsonConverter))]
 	public DateOnly? LeadLabDateP { get; set; }
-	public int LeadLabScore { get; set; }
+	public int? LeadLabScore { get; set; }
 	[JsonConverter(typeof(NullableDateOnlyJsonConverter))]
 	public DateOnly? AEDateP { get; set; }
 	public int? AEScore { get; set; }
