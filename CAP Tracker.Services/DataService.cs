@@ -19,47 +19,49 @@ public class DataService
         for (int r = 1; r < sheetData.Elements<Row>().Count(); r++)
         {
             var row = (Row)sheetData.ElementAt(r);
-            int col = 0;
+            int colIndex = 1;
+            var rowIndex = row.RowIndex!.Value;
+            var cells = row.Elements<Cell>();
 
             data.Add(new CAPTrackerData
             {
-                CAPID = GetCellValue(workbookPart, row, col++).ToInt32(),
-                NameLast = GetCellValue(workbookPart, row, col++),
-                NameFirst = GetCellValue(workbookPart, row, col++),
-                Email = GetCellValue(workbookPart, row, col++),
-                AchvName = GetCellValue(workbookPart, row, col++),
-                AprDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                JoinDate = GetCellValue(workbookPart, row, col++).ToDateOnly()!.Value,
-                Region = GetCellValue(workbookPart, row, col++),
-                Wing = GetCellValue(workbookPart, row, col++),
-                Unit = GetCellValue(workbookPart, row, col++),
-                PhyFitTest = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                LeadLabDateP = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                LeadLabScore = GetCellValue(workbookPart, row, col++).ToInt32(),
-                AEDateP = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                AEScore = GetCellValue(workbookPart, row, col++).ToInt32(),
-                AEModuleOrTest = GetCellValue(workbookPart, row, col++),
-                CharacterDevelopment = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                ActivePart = GetCellValue(workbookPart, row, col++).ToBoolean(),
-                ActiveParticipationDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                CadetOath = GetCellValue(workbookPart, row, col++).ToBoolean(),
-                CadetOathDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                LeadershipExpectationsDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                UniformDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                SpecialActivityDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                NextApprovalDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                StaffServiceDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                OralPresentationDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                TechnicalWritingAssignmentDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                TechnicalWritingAssignment = GetCellValue(workbookPart, row, col++),
-                DrillDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                DrillScore = GetCellValue(workbookPart, row, col++).ToInt32(),
-                WelcomeCourseDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                EssayDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                SpeechDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                AEInteractiveDate = GetCellValue(workbookPart, row, col++).ToDateOnly(),
-                AEInteractiveModule = GetCellValue(workbookPart, row, col++),
-                LeadershipInteractiveDate = GetCellValue(workbookPart, row, col++).ToDateOnly()
+                CAPID = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToInt32(),
+                NameLast = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                NameFirst = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                Email = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                AchvName = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                AprDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                JoinDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly()!.Value,
+                Region = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                Wing = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                Unit = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                PhyFitTest = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                LeadLabDateP = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                LeadLabScore = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToInt32(),
+                AEDateP = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                AEScore = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToInt32(),
+                AEModuleOrTest = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                CharacterDevelopment = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                ActivePart = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToBoolean(),
+                ActiveParticipationDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                CadetOath = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToBoolean(),
+                CadetOathDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                LeadershipExpectationsDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                UniformDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                SpecialActivityDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                NextApprovalDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                StaffServiceDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                OralPresentationDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                TechnicalWritingAssignmentDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                TechnicalWritingAssignment = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                DrillDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                DrillScore = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToInt32(),
+                WelcomeCourseDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                EssayDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                SpeechDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                AEInteractiveDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                AEInteractiveModule = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
+                LeadershipInteractiveDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly()
             }
             );
         }
@@ -73,51 +75,57 @@ public class DataService
         return data;
     }
 
-    public static string? GetCellValue(WorkbookPart wbPart, Row row, int colIndex)
+    private static string? GetCellValue(WorkbookPart wbPart, IEnumerable<Cell> cells, string cellRef)
     {
         string value = string.Empty;
-        try
+        Cell? theCell = cells.FirstOrDefault(c => c.CellReference == cellRef);
+
+        if (theCell != null && theCell.InnerText.Length > 0)
         {
-            Cell theCell = (Cell)row.ElementAt(colIndex);
-            if (theCell.InnerText.Length > 0)
+            value = theCell.InnerText;
+
+            if (theCell.DataType != null)
             {
-                value = theCell.InnerText;
-
-                if (theCell.DataType != null)
+                switch (theCell.DataType.Value)
                 {
-                    switch (theCell.DataType.Value)
-                    {
-                        case CellValues.SharedString:
+                    case CellValues.SharedString:
 
-                            var stringTable =
-                                wbPart.GetPartsOfType<SharedStringTablePart>()
-                                .FirstOrDefault();
+                        var stringTable =
+                            wbPart.GetPartsOfType<SharedStringTablePart>()
+                            .FirstOrDefault();
 
-                            if (stringTable != null)
-                            {
-                                value =
-                                    stringTable.SharedStringTable
-                                    .ElementAt(int.Parse(value)).InnerText;
-                            }
-                            break;
+                        if (stringTable != null)
+                        {
+                            value = stringTable.SharedStringTable
+                                .ElementAt(int.Parse(value)).InnerText;
+                        }
+                        break;
 
-                        case CellValues.Boolean:
-                            value = value switch
-                            {
-                                "0" => "FALSE",
-                                _ => "TRUE",
-                            };
-                            break;
-                    }
+                    case CellValues.Boolean:
+                        value = value switch
+                        {
+                            "0" => "FALSE",
+                            _ => "TRUE",
+                        };
+                        break;
                 }
             }
         }
-        catch (Exception)
-        {
-        }
         return value;
     }
-
+    private static string GetCellRef(long iCol, long? iRow = default)
+    {
+        long a, b;
+        string GetCellRef = string.Empty;
+        while (iCol > 0)
+        {
+            a = (int)((iCol - 1) / 26);
+            b = (iCol - 1) % 26;
+            GetCellRef = (char)(b + 65) + GetCellRef;
+            iCol = a;
+        }
+        return $"{GetCellRef}{iRow}";
+    }
     public static List<CAPTrackerData> DeserializeFile(string binFileName)
     {
         var resultBytes = File.ReadAllBytes(binFileName);
