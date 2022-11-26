@@ -59,7 +59,7 @@ namespace CAP_Tracker.Services
                     }
                     else if (!currentAchv.AprDate.HasValue)
                     {
-                        currentAchv.DaysToPromote = (DateTime.Today - cadet.NextApprovalDate.Value.ToDateTime(new TimeOnly())).Days;
+                        currentAchv.DaysToPromote = (DateTime.Today - cadet.NextApprovalDate!.Value.ToDateTime(new TimeOnly())).Days;
                         cadet.NextApprovalDays = (DateTime.Today - cadet.NextApprovalDate!.Value.ToDateTime(new TimeOnly())).Days;
                     }
                     else
