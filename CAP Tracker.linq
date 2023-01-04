@@ -5,12 +5,11 @@
   <Namespace>CAP_Tracker.Services</Namespace>
 </Query>
 
-const string FileName = @"C:\Users\rafae\Downloads\Cadet_Full_Track_Report-11_22_2022.xlsx";
+const string FileName = @"C:\Users\rafae\Downloads\Cadet_Full_Track_Report-11_26_2022.xlsx";
 string BinFileName => $"{Path.Combine(Path.GetDirectoryName(FileName), Path.GetFileNameWithoutExtension(FileName))}.bin";
-List<CapTracker> Tracker;
 List<CAPTrackerData> Data;
-SortedDictionary<string, Achievement> Achievements;
-List<int> inactiveCadets = new List<int> { 666678, 646802, 655222, 578597, 578508, 629476, 671817, 592093, 630678, 658795, 675389, 600925, 649211, 675385, 653495, 653494, 624037, 683219, 674024, 675384 };
+//List<int> inactiveCadets = new List<int> { 578508, 592093, 624037, 683219 };
+List<int> inactiveCadets = null;
 
 void Main()
 {
@@ -20,7 +19,7 @@ void Main()
 		DataService.ClearCachedFile(BinFileName);
 		return;
 	}
-	
+
 	if (File.Exists(BinFileName))
 	{
 		Console.WriteLine("Loading from cached file");
@@ -37,10 +36,20 @@ void Main()
 		Data = DataService.LoadFile(FileName);
 		DataService.SerializeFile(Data, BinFileName);
 	}
-	Achievements = DataService.GetAchievements();
 
-	var ts = new TrackerService(Data, Achievements, inactiveCadets);
-	ts.GetTracker();
-	
-	ts.Tracker.Where(t => t.NameLast == "Delgado").OrderBy(t => t.AvgDaysToPromote).Dump();
+	var ts = new TrackerService(Data, inactiveCadets);
+
+	(from a in TrackerService.Achievements
+	 group a by a.Value.Phase into phases
+	 let achievements = 
+	 	(from p in phases 
+		 join t in ts.Tracker on p.Value.CadetAchvID equals t.LastAchv.CadetAchvID into g
+		 select new { p.Value.CadetAchvID, Count = g.Count(), p.Value.Grade, Insignia = Util.Image(p.Value.Insignia, scaleMode: Util.ScaleMode.ResizeTo(width: default, height: 50)), cadets = g.OrderBy(c => c.NextApprovalDays).ToList() })
+	 let count = achievements.Sum(a => a.cadets.Count())
+	 select new { Phase = phases.Key, Count = count, Achievements = achievements }).Dump(collapseTo: 2);
+	 
+	 
+	//(from a in TrackerService.Achievements
+	// join t in ts.Tracker on a.Value.CadetAchvID equals t.LastAchv.CadetAchvID into g
+	// select new { a.Key, a.Value.CadetAchvID, a.Value.Phase, count = g.Count(), cadets = g }).Dump(collapseTo: 1);
 }

@@ -147,30 +147,5 @@ public class DataService
         File.WriteAllBytes(binFileName, resultBytes);
     }
 
-    public static SortedDictionary<string, Achievement> GetAchievements()
-        => new()
-        {
-            { "Achievement 0", new Achievement("Achievement 0", "0", "C/AB", false, false) },
-            { "Achievement 1", new Achievement("Achievement 1", "1", "C/Amn", false, true) },
-            { "Achievement 2", new Achievement("Achievement 2", "2", "C/A1C", false, true) },
-            { "Achievement 3", new Achievement("Achievement 3", "3", "C/SrA", false, true) },
-            { "Wright Brothers", new Achievement("Wright Brothers", "Wright", "C/SSgt", false, false) },
-            { "Achievement 4", new Achievement("Achievement 4", "4", "C/TSgt", false, true) },
-            { "Achievement 5", new Achievement("Achievement 5", "5", "C/MSgt", false, true) },
-            { "Achievement 6", new Achievement("Achievement 6", "6", "C/SMSgt", false, true) },
-            { "Achievement 7", new Achievement("Achievement 7", "7", "C/CMSgt (1)", false, true) },
-            { "Achievement 8", new Achievement("Achievement 8", "8", "C/CMSgt (2)", true, true) },
-            { "Billy Mitchell", new Achievement("Billy Mitchell", "Mitchell", "C/2d Lt (1)", false, false) },
-            { "Achievement 9", new Achievement("Achievement 9", "9", "C/2d Lt (2)", true, true) },
-            { "Achievement 10", new Achievement("Achievement 10", "10", "C/1st Lt (1)", true, true) },
-            { "Achievement 11", new Achievement("Achievement 11", "11", "C/1st Lt (2)", true, true) },
-            { "Amelia Earhart", new Achievement("Amelia Earhart", "Earhart", "C/Capt (1)", false, false) },
-            { "Achievement 12", new Achievement("Achievement 12", "12", "C/Capt (2)", true, true) },
-            { "Achievement 13", new Achievement("Achievement 13", "13", "C/Capt (3)", true, true) },
-            { "Achievement 14", new Achievement("Achievement 14", "14", "C/Maj (1)", true, true) },
-            { "Achievement 15", new Achievement("Achievement 15", "15", "C/Maj (2)", true, true) },
-            { "Achievement 16", new Achievement("Achievement 16", "16", "C/Maj (3)", true, true) },
-            { "Gen Ira C Eaker", new Achievement("Gen Ira C Eaker", "Eaker", "C/Lt Col", false, false) },
-            { "Gen Carl A Spaatz", new Achievement("Gen Carl A Spaatz", "Spaatz", "C/Col", false, false) },
-    };
+
 }
