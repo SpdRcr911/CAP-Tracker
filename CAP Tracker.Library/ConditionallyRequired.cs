@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace CAP_Tracker.Library
+﻿namespace CAP_Tracker.Library
 {
     public class ConditionallyRequired<T> where T : struct
     {
@@ -9,23 +7,12 @@ namespace CAP_Tracker.Library
         public T? Value { get; set; } = default;
         public override string? ToString()
         {
-            if (Required)
+            return this switch
             {
-                if (HasValue)
-                {
-                    return Value!.ToString();
-                }
-                else
-                {
-                    return "None";
-                }
-            }
-            else
-            {
-                return "N/A";
-            }
-
-            //return Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+                { Required: true, HasValue: true } => Value!.ToString(),
+                { Required: true, HasValue: false } => "None",
+                _ => "N/A"
+            };
         }
     }
 }
