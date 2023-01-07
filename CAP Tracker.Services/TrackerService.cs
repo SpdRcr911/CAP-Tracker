@@ -25,8 +25,22 @@ public class TrackerService
     {
         Tracker = (from t in Data.Where(d => InactiveCadets == null || !InactiveCadets.Contains(d.CAPID!.Value))
                    group t by new { t.CAPID, t.NameLast, t.NameFirst, t.Email, t.JoinDate } into g
-                   let achievements = (from a in g select new CapAchievemntRecord(a.AchvName!, a.AprDate) { PT = a.PhyFitTest.HasValue, LD = a.LeadLabDateP.HasValue || a.LeadershipInteractiveDate.HasValue, AE = a.AEDateP.HasValue || a.AEInteractiveDate.HasValue, Drill = a.DrillDate.HasValue, CD = a.CharacterDevelopment.HasValue }).ToList()
-                   let currentAchv = Achievements.Values.First(a => a.CadetAchvID == achievements.Where(a => a.AprDate.HasValue).Last().AchvName)
+                   let achievements = (from a in g
+                                       select new CapAchievemntRecord(a.AchvName!, a.AprDate)
+                                       {
+                                           PT = a.PhyFitTest.HasValue,
+                                           LD = a.LeadLabDateP.HasValue || a.LeadershipInteractiveDate.HasValue,
+                                           AE = a.AEDateP.HasValue || a.AEInteractiveDate.HasValue,
+                                           Drill = a switch
+                                           { 
+                                               { DrillDate.Required: true, DrillDate.HasValue: true } => true,
+                                               { DrillDate.Required: true, DrillDate.HasValue: false } => false,
+                                               _ => new bool?()
+                                           },
+                                           CD = a.CharacterDevelopment.HasValue
+                                       }).ToList()
+                   let lastAch = achievements.Any(a => a.AprDate.HasValue) ? achievements.Where(a => a.AprDate.HasValue).Last() : achievements.Last()
+                   let currentAchv = Achievements.Values.First(a => a.CadetAchvID == lastAch.AchvName)
                    let nextApprovalDate = (achievements.All(a => a.AprDate.HasValue) ? new DateOnly?() : g.Max(c => c.NextApprovalDate!.Value))
                    select new CapTracker(g.Key.CAPID!.Value, currentAchv, g.Key.NameLast, g.Key.NameFirst, g.Key.Email, g.Key.JoinDate, nextApprovalDate, achievements)).ToList();
 

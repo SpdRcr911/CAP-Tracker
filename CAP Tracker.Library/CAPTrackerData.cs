@@ -51,8 +51,8 @@ public class CAPTrackerData
     public DateOnly? SpecialActivityDate { get; set; }
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? NextApprovalDate { get; set; }
-    [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
-    public DateOnly? DrillDate { get; set; }
+    [JsonConverter(typeof(ConditionalDateOnlyJsonConverter))]
+    public ConditionallyRequired<DateOnly> DrillDate { get; set; }
     public int? DrillScore { get; set; }
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? WelcomeCourseDate { get; set; }

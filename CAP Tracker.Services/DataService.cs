@@ -54,7 +54,7 @@ public class DataService
                 OralPresentationDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
                 TechnicalWritingAssignmentDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
                 TechnicalWritingAssignment = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
-                DrillDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                DrillDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToConditionalDateOnly(),
                 DrillScore = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToInt32(),
                 WelcomeCourseDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
                 EssayDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),

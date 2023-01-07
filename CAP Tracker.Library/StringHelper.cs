@@ -25,4 +25,36 @@ public static class ExtensionMethods
 		};
 		return new Boolean?();
 	}
+    public static ConditionallyRequired<DateOnly> ToConditionalDateOnly(this string? value)
+    {
+        if (value != null)
+        {
+            if (value == "None")
+            {
+                return new ConditionallyRequired<DateOnly>
+                {
+                    Required = true,
+                    HasValue = false
+                };
+            }
+            else if (value == "N/A")
+            {
+                return new ConditionallyRequired<DateOnly>
+                {
+                    Required = false,
+                    HasValue = false
+                };
+            }
+            else if (DateOnly.TryParse(value!, out var result))
+            {
+                return new ConditionallyRequired<DateOnly>
+                {
+                    Required = true,
+                    HasValue = true,
+                    Value = result
+                };
+            }
+        }
+        return new ConditionallyRequired<DateOnly>();
+    }
 }
