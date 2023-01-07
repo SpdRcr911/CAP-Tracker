@@ -38,10 +38,9 @@ public class DataService
                 PhyFitTest = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
                 LeadLabDateP = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
                 LeadLabScore = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToInt32(),
-                AEResults = new AEResults (
-                    GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
-                    GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
-                    GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}")),
+                AEDateP = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
+                AEScore = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToInt32(),
+                AEModuleOrTest = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}"),
                 CharacterDevelopment = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),
                 ActivePart = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToBoolean(),
                 ActiveParticipationDate = GetCellValue(workbookPart, cells, $"{GetCellRef(colIndex++, rowIndex)}").ToDateOnly(),

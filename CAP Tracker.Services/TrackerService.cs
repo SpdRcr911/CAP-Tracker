@@ -30,8 +30,8 @@ public class TrackerService
                                        select new CapAchievemntRecord(a.AchvName!, a.AprDate)
                                        {
                                            PT = a.PhyFitTest.HasValue,
-                                           LD = a.LeadLabDateP.HasValue || a.LeadershipInteractiveDate.HasValue,
-                                           AE = !achRow.NeedsAE ? null : (a.AEResults!.HasValue || a.AEInteractiveDate.HasValue),
+                                           LD = (a.AchvName == "Gen Ira C Eaker") ? a.SpeechDate.HasValue : (a.LeadLabDateP.HasValue || a.LeadershipInteractiveDate.HasValue),
+                                           AE = !achRow.NeedsAE ? null : (a.AEDateP.HasValue || a.AEInteractiveDate.HasValue),
                                            Drill = !achRow.NeedsDrill ? null : a.DrillDate.HasValue,
                                            CD = !achRow.NeedsCD ? null : a.CharacterDevelopment.HasValue
                                        }).ToList()
