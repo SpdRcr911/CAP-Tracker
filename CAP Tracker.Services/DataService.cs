@@ -65,12 +65,6 @@ public class DataService
             }
             );
         }
-        var zeroData = (from c in data
-                        group c by new { c.CAPID, c.NameLast, c.NameFirst, c.JoinDate } into g
-                        select new CAPTrackerData(g.Key.CAPID, g.Key.NameLast, g.Key.NameFirst, g.Key.JoinDate, "Achievement 0", g.Key.JoinDate, g.Key.JoinDate)).ToList();
-
-        zeroData.AddRange(data);
-        data = zeroData;
 
         return data;
     }
