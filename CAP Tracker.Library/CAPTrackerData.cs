@@ -31,11 +31,7 @@ public class CAPTrackerData
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? LeadLabDateP { get; set; }
     public int? LeadLabScore { get; set; }
-    [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
-    public DateOnly? AEDateP { get; set; }
-    public int? AEScore { get; set; }
-    public string? AEModuleOrTest { get; set; }
-    [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
+    public AEResults? AEResults { get; set; }
     public DateOnly? CharacterDevelopment { get; set; }
     public bool? ActivePart { get; set; }
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
@@ -52,7 +48,7 @@ public class CAPTrackerData
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? NextApprovalDate { get; set; }
     [JsonConverter(typeof(ConditionalDateOnlyJsonConverter))]
-    public ConditionallyRequired<DateOnly> DrillDate { get; set; }
+    public ConditionallyRequired<DateOnly>? DrillDate { get; set; }
     public int? DrillScore { get; set; }
     [JsonConverter(typeof(NullableDateOnlyJsonConverter))]
     public DateOnly? WelcomeCourseDate { get; set; }

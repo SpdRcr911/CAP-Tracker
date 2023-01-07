@@ -30,7 +30,7 @@ public class TrackerService
                                        {
                                            PT = a.PhyFitTest.HasValue,
                                            LD = a.LeadLabDateP.HasValue || a.LeadershipInteractiveDate.HasValue,
-                                           AE = a.AEDateP.HasValue || a.AEInteractiveDate.HasValue,
+                                           AE = a.AEResults!.HasValue || a.AEInteractiveDate.HasValue,
                                            Drill = a switch
                                            { 
                                                { DrillDate.Required: true, DrillDate.HasValue: true } => true,
