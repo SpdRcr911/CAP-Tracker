@@ -1,6 +1,6 @@
 <Query Kind="Program">
-  <Reference Relative="publish\CAP Tracker.Library.dll">C:\Code\CAP-Tracker\publish\CAP Tracker.Library.dll</Reference>
-  <Reference Relative="publish\CAP Tracker.Services.dll">C:\Code\CAP-Tracker\publish\CAP Tracker.Services.dll</Reference>
+  <Reference Relative="CAP Tracker.Services\bin\Debug\net7.0\CAP Tracker.Library.dll">C:\Users\rafae\OneDrive\Code\CAP Tracker\CAP Tracker.Services\bin\Debug\net7.0\CAP Tracker.Library.dll</Reference>
+  <Reference Relative="CAP Tracker.Services\bin\Debug\net7.0\CAP Tracker.Services.dll">C:\Users\rafae\OneDrive\Code\CAP Tracker\CAP Tracker.Services\bin\Debug\net7.0\CAP Tracker.Services.dll</Reference>
   <Namespace>CAP_Tracker.Library</Namespace>
   <Namespace>CAP_Tracker.Services</Namespace>
   <Namespace>LINQPad.Controls</Namespace>
@@ -18,6 +18,9 @@ void Main()
 	ResultContainer = new DumpContainer();
 	FilePicker = new FilePicker() { Text = Util.LoadString("Last file path") ?? "" };
 
+	var dataOnly = new Button("Data Only");
+	dataOnly.Click += DataOnlyClick;
+
 	var groupByPhrase = new Button("Group by Phase");
 	groupByPhrase.Click += GroupByPhaseClick;
 
@@ -25,12 +28,28 @@ void Main()
 	groupByAchievement.Click += GroupByAchievementClick;
 
 	inputContainer.Children.Add(FilePicker);
+	inputContainer.Children.Add(dataOnly);
 	inputContainer.Children.Add(groupByPhrase);
 	inputContainer.Children.Add(groupByAchievement);
 
 	inputContainer.Dump();
 	ResultContainer.Dump();
 
+}
+
+void DataOnlyClick(object sender, EventArgs e)
+{
+	if (!string.IsNullOrEmpty(FilePicker.Text))
+	{
+		DataOnly(FilePicker.Text, ResultContainer);
+		Util.SaveString("Last file path", FilePicker.Text);
+	}
+}
+void DataOnly(string trackerFileName, DumpContainer container)
+{
+	List<CAPTrackerData> Data;
+	Data = DataService.LoadFile(trackerFileName);
+	container.Content = Data;//.Where(d => d.AchvName == "Achievement 1");
 }
 
 void GroupByAchievementClick(object sender, EventArgs e)
@@ -41,7 +60,6 @@ void GroupByAchievementClick(object sender, EventArgs e)
 		Util.SaveString("Last file path", FilePicker.Text);
 	}
 }
-
 void GroupByAchievement(string trackerFileName, DumpContainer container)
 {
 	List<CAPTrackerData> Data;
@@ -70,7 +88,7 @@ void GroupByAchievement(string trackerFileName, DumpContainer container)
 							 t.LastAchv.CadetAchvID,
 							 t.NextApprovalDate,
 							 t.NextApprovalDays,
-							 NextAchievement = WorkingOn.AchvName,
+							 NextAchievement = WorkingOn.AchvName == "New Cadet" ? "Achievement 1" : WorkingOn.AchvName,
 							 CD = WorkingOn.CD,
 							 PT = WorkingOn.PT,
 							 Drill = WorkingOn.Drill,
