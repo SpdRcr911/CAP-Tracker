@@ -65,7 +65,10 @@ public class DataService
             }
             );
         }
-
+        foreach (var ditem in data.Where(x => x.AchvName == "Achievement 1" && x.AprDate == null))
+        {
+            ditem.AchvName = "New Cadet";
+        } 
         return data;
     }
 

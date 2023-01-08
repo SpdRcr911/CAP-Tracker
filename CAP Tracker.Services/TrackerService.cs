@@ -74,6 +74,7 @@ public class TrackerService
 
     public static readonly SortedDictionary<int, Achievement> Achievements = new()
     {
+        { 0, new Achievement("New Cadet", "0", "C/AB", "Trial", false, false, false, false, null) },
         { 1, new Achievement("Achievement 1", "1", "C/Amn", "PHASE I - The Learning Phase", false, true, false, true, new Uri("https://www.gocivilairpatrol.com/media/cms/curry_insig_F3AB50D13AA8E.jpg")) },
         { 2, new Achievement("Achievement 2", "2", "C/A1C", "PHASE I - The Learning Phase", true, true, false, true, new Uri("https://www.gocivilairpatrol.com/media/cms/arnold_insig_65858DA05810F.jpg")) },
         { 3, new Achievement("Achievement 3", "3", "C/SrA", "PHASE I - The Learning Phase", true, true, false, true, new Uri("https://www.gocivilairpatrol.com/media/cms/feik_insig_2CBC98B37573A.jpg")) },
