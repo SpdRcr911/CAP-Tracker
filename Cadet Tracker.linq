@@ -1,46 +1,94 @@
 <Query Kind="Program">
-  <Reference Relative="CAP Tracker.Services\publish\CAP Tracker.Library.dll">C:\Users\rafae\OneDrive\Code\CAP Tracker\CAP Tracker.Services\publish\CAP Tracker.Library.dll</Reference>
-  <Reference Relative="CAP Tracker.Services\publish\CAP Tracker.Services.dll">C:\Users\rafae\OneDrive\Code\CAP Tracker\CAP Tracker.Services\publish\CAP Tracker.Services.dll</Reference>
+  <Reference Relative="publish\CAP Tracker.Library.dll">C:\Code\CAP-Tracker\publish\CAP Tracker.Library.dll</Reference>
+  <Reference Relative="publish\CAP Tracker.Services.dll">C:\Code\CAP-Tracker\publish\CAP Tracker.Services.dll</Reference>
   <Namespace>CAP_Tracker.Library</Namespace>
   <Namespace>CAP_Tracker.Services</Namespace>
   <Namespace>LINQPad.Controls</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
 </Query>
 
-//List<int> inactiveCadets = new List<int> { 578508, 592093, 624037, 683219 };
-static List<int> inactiveCadets = null;
+readonly List<int> inactiveCadets = new List<int> { 624037, 600925, 592093, 631353, 578508 };
+//static List<int> inactiveCadets = null;
+DumpContainer ResultContainer;
+FilePicker FilePicker;
 
 void Main()
 {
 	var inputContainer = new WrapPanel();
-	var results = new DumpContainer();
-	var filePath = new FilePicker() { Text = Util.LoadString("Last file path") ?? "" };
-	var button = new Button("Analyse");
+	ResultContainer = new DumpContainer();
+	FilePicker = new FilePicker() { Text = Util.LoadString("Last file path") ?? "" };
 
-	inputContainer.Children.Add(filePath);
-	inputContainer.Children.Add(button);
-	
-	
-	//inputContainer.Content = button;
+	var groupByPhrase = new Button("Group by Phase");
+	groupByPhrase.Click += GroupByPhaseClick;
+
+	var groupByAchievement = new Button("Group by Achievement");
+	groupByAchievement.Click += GroupByAchievementClick;
+
+	inputContainer.Children.Add(FilePicker);
+	inputContainer.Children.Add(groupByPhrase);
+	inputContainer.Children.Add(groupByAchievement);
+
 	inputContainer.Dump();
-	results.Dump();
+	ResultContainer.Dump();
 
-	button.Click += (sender, args) =>
-	{
-		if (!string.IsNullOrEmpty(filePath.Text))
-		{
-
-			AnalizeTracker(filePath.Text, results);
-			Util.SaveString("Last file path", filePath.Text);
-		}
-		else if (!string.IsNullOrEmpty(filePath.Text))
-		{
-			
-		}
-	};
 }
 
-public static void AnalizeTracker(string trackerFileName, DumpContainer container)
+void GroupByAchievementClick(object sender, EventArgs e)
+{
+	if (!string.IsNullOrEmpty(FilePicker.Text))
+	{
+		GroupByAchievement(FilePicker.Text, ResultContainer);
+		Util.SaveString("Last file path", FilePicker.Text);
+	}
+}
+
+void GroupByAchievement(string trackerFileName, DumpContainer container)
+{
+	List<CAPTrackerData> Data;
+	Data = DataService.LoadFile(trackerFileName);
+
+	var service = new TrackerService(Data, inactiveCadets);
+	container.Content = (from t in service.Tracker
+						 join a in TrackerService.Achievements on t.LastAchv.CadetAchvID equals a.Value.CadetAchvID
+						 let WorkingOn = t.CadetAchivements.Last()
+						 let PromotionScore = Convert.ToInt16(t.NextApprovalDays >= 0) << 6 |
+						                      Convert.ToInt16(WorkingOn.CD ?? true) << 5 |
+											  Convert.ToInt16(WorkingOn.PT ?? true) << 4 |
+											  Convert.ToInt16(WorkingOn.Drill ?? true) << 3 |
+											  Convert.ToInt16(WorkingOn.AE ?? true) << 2 |
+											  Convert.ToInt16(WorkingOn.LD ?? true) << 1
+						 //where t.NextApprovalDays >= 100
+						 orderby a.Key, PromotionScore descending, t.NextApprovalDays descending
+						 select new
+						 {
+							 t.CAPID,
+							 t.NameLast,
+							 t.NameFirst,
+							 t.JoinDate,
+							 t.Email,
+							 t.AvgDaysToPromote,
+							 t.LastAchv.CadetAchvID,
+							 t.NextApprovalDate,
+							 t.NextApprovalDays,
+							 NextAchievement = WorkingOn.AchvName,
+							 CD = WorkingOn.CD,
+							 PT = WorkingOn.PT,
+							 Drill = WorkingOn.Drill,
+							 AE = WorkingOn.AE,
+							 LD = WorkingOn.LD,
+							 PromotionScore
+						 });
+}
+
+void GroupByPhaseClick(object sender, EventArgs args)
+{
+	if (!string.IsNullOrEmpty(FilePicker.Text))
+	{
+		GroupByPhase(FilePicker.Text, ResultContainer);
+		Util.SaveString("Last file path", FilePicker.Text);
+	}
+}
+void GroupByPhase(string trackerFileName, DumpContainer container)
 {
 	List<CAPTrackerData> Data;
 	Data = DataService.LoadFile(trackerFileName);
@@ -64,3 +112,4 @@ public static void AnalizeTracker(string trackerFileName, DumpContainer containe
 
 	container.Content = dout;
 }
+
