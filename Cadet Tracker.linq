@@ -1,6 +1,6 @@
 <Query Kind="Program">
-  <Reference Relative="CAP Tracker.Services\bin\Debug\net7.0\CAP Tracker.Library.dll">C:\Users\rafae\OneDrive\Code\CAP Tracker\CAP Tracker.Services\bin\Debug\net7.0\CAP Tracker.Library.dll</Reference>
-  <Reference Relative="CAP Tracker.Services\bin\Debug\net7.0\CAP Tracker.Services.dll">C:\Users\rafae\OneDrive\Code\CAP Tracker\CAP Tracker.Services\bin\Debug\net7.0\CAP Tracker.Services.dll</Reference>
+  <Reference Relative="publish\CAP Tracker.Library.dll">C:\Code\CAP-Tracker\publish\CAP Tracker.Library.dll</Reference>
+  <Reference Relative="publish\CAP Tracker.Services.dll">C:\Code\CAP-Tracker\publish\CAP Tracker.Services.dll</Reference>
   <Namespace>CAP_Tracker.Library</Namespace>
   <Namespace>CAP_Tracker.Services</Namespace>
   <Namespace>LINQPad.Controls</Namespace>
@@ -69,12 +69,12 @@ void GroupByAchievement(string trackerFileName, DumpContainer container)
 	container.Content = (from t in service.Tracker
 						 join a in TrackerService.Achievements on t.LastAchv.CadetAchvID equals a.Value.CadetAchvID
 						 let WorkingOn = t.CadetAchivements.Last()
-						 let PromotionScore = Convert.ToInt16(t.NextApprovalDays >= 0) << 6 |
-						                      Convert.ToInt16(WorkingOn.CD ?? true) << 5 |
-											  Convert.ToInt16(WorkingOn.PT ?? true) << 4 |
-											  Convert.ToInt16(WorkingOn.Drill ?? true) << 3 |
-											  Convert.ToInt16(WorkingOn.AE ?? true) << 2 |
-											  Convert.ToInt16(WorkingOn.LD ?? true) << 1
+						 let PromotionScore = Convert.ToInt16(t.NextApprovalDays >= 0) << 5 |
+						                      Convert.ToInt16(WorkingOn.CD ?? true) << 4 |
+											  Convert.ToInt16(WorkingOn.PT ?? true) << 3 |
+											  Convert.ToInt16(WorkingOn.Drill ?? true) << 2 |
+											  Convert.ToInt16(WorkingOn.AE ?? true) << 1 |
+											  Convert.ToInt16(WorkingOn.LD ?? true) << 0
 						 //where t.NextApprovalDays >= 100
 						 orderby a.Key, PromotionScore descending, t.NextApprovalDays descending
 						 select new
@@ -84,7 +84,7 @@ void GroupByAchievement(string trackerFileName, DumpContainer container)
 							 t.NameFirst,
 							 t.JoinDate,
 							 t.Email,
-							 t.AvgDaysToPromote,
+							 AvgDaysToPromote = (int?)t.AvgDaysToPromote,
 							 t.LastAchv.CadetAchvID,
 							 t.NextApprovalDate,
 							 t.NextApprovalDays,
