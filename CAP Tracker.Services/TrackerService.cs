@@ -4,44 +4,62 @@ namespace CAP_Tracker.Services;
 
 public class TrackerService
 {
-    readonly List<CAPTrackerData> Data;
-    readonly List<int>? InactiveCadets;
-    public List<CapTracker> Tracker { get; private set; }
+    private readonly IEnumerable<CAPTrackerData> Data;
+    private readonly IEnumerable<int>? InactiveCadets;
+
+    private IEnumerable<CapTracker>? tracker;
+
+    public IEnumerable<CapTracker> Tracker
+    {
+        get
+        {
+            tracker ??= GetTracker(Data);
+            return tracker;
+        }
+    }
+
+    private IEnumerable<Cadet>? cadets;
+
+    public IEnumerable<Cadet> Cadets
+    {
+        get
+        {
+            cadets ??= GetCadets(Data);
+            return cadets;
+        }
+    }
 
     public TrackerService()
     {
         Data = new List<CAPTrackerData>();
         InactiveCadets = new List<int>();
-        Tracker = new List<CapTracker>();
     }
-    public TrackerService(List<CAPTrackerData> data, List<int>? inactiveCadets = default)
+    public TrackerService(IEnumerable<CAPTrackerData> data, IEnumerable<int>? inactiveCadets = default)
     {
         Data = data;
         InactiveCadets = inactiveCadets;
-        Tracker = new List<CapTracker>();
-        GetTracker();
     }
-    private void GetTracker()
+    private IEnumerable<CapTracker> GetTracker(IEnumerable<CAPTrackerData> data)
     {
-        Tracker = (from t in Data.Where(d => InactiveCadets == null || !InactiveCadets.Contains(d.CAPID!.Value))
-                   group t by new { t.CAPID, t.NameLast, t.NameFirst, t.Email, t.JoinDate } into g
-                   let achievements = (from a in g
-                                       let achRow = Achievements.Values.First(ar => ar.CadetAchvID == a.AchvName)
-                                       select new CapAchievemntRecord(a.AchvName!, a.AprDate)
-                                       {
-                                           PT = a.PhyFitTest.HasValue,
-                                           LD = (a.AchvName == "Gen Ira C Eaker") ? a.SpeechDate.HasValue : (a.LeadLabDateP.HasValue || a.LeadershipInteractiveDate.HasValue),
-                                           AE = !achRow.NeedsAE ? null : (a.AEDateP.HasValue || a.AEInteractiveDate.HasValue),
-                                           Drill = !achRow.NeedsDrill ? null : a.DrillDate.HasValue,
-                                           CD = !achRow.NeedsCD ? null : a.CharacterDevelopment.HasValue
-                                       }).ToList()
-                   let lastAch = achievements.Any(a => a.AprDate.HasValue) ? achievements.Where(a => a.AprDate.HasValue).Last() : achievements.Last()
-                   let currentAchv = Achievements.Values.First(a => a.CadetAchvID == lastAch.AchvName)
-                   let nextApprovalDate = (achievements.All(a => a.AprDate.HasValue) ? new DateOnly?() : g.Max(c => c.NextApprovalDate!.Value))
-                   select new CapTracker(g.Key.CAPID!.Value, currentAchv, g.Key.NameLast, g.Key.NameFirst, g.Key.Email, g.Key.JoinDate, nextApprovalDate, achievements)).ToList();
+        var tracker = (from t in data.Where(d => InactiveCadets == null || !InactiveCadets.Contains(d.CAPID!.Value))
+                       group t by new { t.CAPID, t.NameLast, t.NameFirst, t.Email, t.JoinDate } into g
+                       let achievements = (from a in g
+                                           let achRow = Achievements.Values.First(ar => ar.CadetAchvID == a.AchvName)
+                                           select new CapAchievemntRecord(a.AchvName!, a.AprDate)
+                                           {
+                                               PT = a.PhyFitTest.HasValue,
+                                               LD = (a.AchvName == "Gen Ira C Eaker") ? a.SpeechDate.HasValue : (a.LeadLabDateP.HasValue || a.LeadershipInteractiveDate.HasValue),
+                                               AE = !achRow.NeedsAE ? null : (a.AEDateP.HasValue || a.AEInteractiveDate.HasValue),
+                                               Drill = !achRow.NeedsDrill ? null : a.DrillDate.HasValue,
+                                               CD = !achRow.NeedsCD ? null : a.CharacterDevelopment.HasValue
+                                           }).ToList()
+                       let lastAch = achievements.Any(a => a.AprDate.HasValue) ? achievements.Where(a => a.AprDate.HasValue).Last() : achievements.Last()
+                       let currentAchv = Achievements.Values.First(a => a.CadetAchvID == lastAch.AchvName)
+                       let nextApprovalDate = (achievements.All(a => a.AprDate.HasValue) ? new DateOnly?() : g.Max(c => c.NextApprovalDate!.Value))
+                       select new CapTracker(g.Key.CAPID!.Value, currentAchv, g.Key.NameLast, g.Key.NameFirst, g.Key.Email, g.Key.JoinDate, nextApprovalDate, achievements)).ToList();
 
 
-        foreach (var cadet in Tracker)
+        foreach (var cadet in tracker)
         {
             for (int i = 0; i < cadet.CadetAchivements.Count; i++)
             {
@@ -70,6 +88,29 @@ public class TrackerService
             }
             cadet.AvgDaysToPromote = cadet.CadetAchivements.Any(ca => ca.EndDate.HasValue) ? cadet.CadetAchivements.Where(ca => ca.AprDate.HasValue && ca.EndDate.HasValue).Average(ca => ca.DaysToPromote) : null;
         }
+        return tracker;
+    }
+    private IEnumerable<Cadet> GetCadets(IEnumerable<CAPTrackerData> data)
+    {
+        return (from d in data
+                group d by new { CAPID = d.CAPID!.Value, d.NameFirst, d.NameLast, d.Email } into gd
+                let isSpaatz = !gd.Any(g => g.AprDate is null)
+                let latestAchievement = (true ? gd.Where(g => g.AprDate == gd.Max(c => c.AprDate)) : gd.Where(g => g.AprDate is null)).First()
+                let nextAprDate = gd.First().NextApprovalDate
+                let nextAchievement = gd.SingleOrDefault(g => g.AprDate is null)
+                let cadet = gd.Key
+                select new Cadet(
+                    cadet.CAPID,
+                    cadet.NameFirst,
+                    cadet.NameLast,
+                    cadet.Email,
+                    latestAchievement.AchvName,
+                    latestAchievement.AprDate,
+                    nextAprDate,
+                    nextAchievement,
+                    gd.ToList()
+                )
+                );
     }
 
     public static readonly SortedDictionary<int, Achievement> Achievements = new()
