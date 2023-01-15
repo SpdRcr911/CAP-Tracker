@@ -2,14 +2,14 @@
 
 namespace CAP_Tracker.Services;
 
-public class TrackerService
+public class TrackerService : ITrackerService
 {
-    private readonly IEnumerable<CAPTrackerData> Data;
     private readonly IEnumerable<int>? InactiveCadets;
 
     private IEnumerable<CapTracker>? tracker;
     private IEnumerable<Cadet>? cadets;
 
+    public IEnumerable<CAPTrackerData> Data { get; private set; }
     public IEnumerable<CapTracker> Tracker
     {
         get
@@ -37,4 +37,10 @@ public class TrackerService
         Data = data;
         InactiveCadets = inactiveCadets;
     }
+
+    public Cadet? GetCadet(int capId) =>  Cadet.GetCadets(Data, capId).FirstOrDefault() ?? null;
+
+    public IEnumerable<CadetsByAchievement> GroupByAchievement() => CadetsByAchievement.GroupByAchievement(this);
+
+    public IEnumerable<CadetsByPhase> GroupByPhase() => CadetsByPhase.GroupByPhase(this);
 }
