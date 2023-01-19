@@ -1,0 +1,29 @@
+﻿@page "/cadetoverview"
+
+<h2>Cadet Overview</h2>
+@if (Cadets is null)
+{
+    <div>No Data</div>
+}
+else
+{
+    <table class="table table-light">
+        <thead class="table-primary">
+            <tr>
+                <th>CAP ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cadet in Cadets)
+            {
+                <tr>
+                    <td>@cadet.CAPID</td>
+                    <td>@cadet.FirstName</td>
+                    <td>@cadet.LastName</td>
+                </tr>
+            }
+        </tbody>
+        </table>
+}
