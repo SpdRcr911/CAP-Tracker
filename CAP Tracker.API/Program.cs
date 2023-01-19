@@ -1,9 +1,13 @@
+using CAP_Tracker.Library;
 using CAP_Tracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var cadetTrackerOptions = builder.Configuration.GetSection(CadetTrackerOptions.Options);
+
 // Add services to the container.
-var data = DataService.LoadFile(@"C:\Users\rafae\Downloads\Cadet_Full_Track_Report-1_11_2023.xlsx");
+var data = DataService.LoadFile(cadetTrackerOptions.GetValue<string>("Path") ?? 
+    throw new ArgumentNullException("Missing Cadet Tracker Path value."));
 
 builder.Services.AddSingleton(new TrackerService(data));
 
